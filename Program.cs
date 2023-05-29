@@ -3,8 +3,8 @@
 Console.Write("What's the name of the player character? ");
 string? playerName = Console.ReadLine();
 
-Monster skeleton = new Monster("Skeleton", 1);
-Hero hero = new Hero(playerName, 1);
+Monster skeleton = new Monster("Skeleton", 1, "bone crunch");
+Hero hero = new Hero(playerName, 1, "punch");
 
 
 List<Hero> heroes = new List<Hero> { hero };

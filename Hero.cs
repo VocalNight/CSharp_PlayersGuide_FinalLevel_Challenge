@@ -8,9 +8,14 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
 {
     internal class Hero : Npc
     {
-        public Hero( string name, int level ) : base(name, level)
+        public Hero( string name, int level, string attackName ) : base(name, level, attackName)
         {
-            this.Team = Faction.Monsters;
+            this.Team = Faction.Monsters;            
+        }
+
+        public override void Attack(Npc enemy)
+        {
+            Console.WriteLine($"{Name} uses {AttackName} on {enemy.Name}");
         }
     }
 }
