@@ -10,20 +10,29 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
     internal abstract class Npc
     {
 
-        public Npc( string name, int level, string attackName)
+        public Npc( string name, int level, int hp, string attackName)
         {
             this.Name = name;
             this.Level = level;
             this.AttackName = attackName;
+            this.Hp = hp;
+            this.CurrentHp = hp;
         }
 
         public string Name { get; private set; }
         public int Level { get; private set; }
         protected string AttackName { get; set; }
+        public int Hp { get; private set; }
+        public int CurrentHp { get; private set; }
 
         public Faction Team { get; protected set; }
 
         public abstract void Attack( Npc enemy );
+
+        public void RemoveHealth(int damage)
+        {
+            CurrentHp = CurrentHp - damage;
+        }
 
     }
     public enum Faction { Heroes, Monsters }

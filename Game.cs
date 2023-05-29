@@ -18,28 +18,43 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
         private List<Monster> _monsters;
         private bool Turn { get; set; }
 
-        public void PlayRound()
+        public int PlayRound()
         {
             if (Turn == true)
             {
                 foreach (var npc in this._heroes)
                 {
-                    Console.WriteLine($"It's {npc.Name} turn..");
                     int enemy = Random.Shared.Next(0, this._monsters.Count);
+                    Console.WriteLine($"It's {npc.Name} turn..");
+
                     Action("Player 1", npc, this._monsters[enemy]);
                 }
             } else
             {
                 foreach(var npc in this._monsters)
                 {
-                    Console.WriteLine($"It's {npc.Name} turn..");
                     int enemy = Random.Shared.Next(0, this._heroes.Count);
+                    Console.WriteLine($"It's {npc.Name} turn..");
+
                     Action("Player 2", npc, this._heroes[enemy]);
                 }
             }
 
+            CheckDead();
+
+            if (this._heroes.Count == 0)
+            {
+                Console.WriteLine("The monsters win!");
+                return 0;
+            } else if (this._monsters.Count == 0)
+            {
+                Console.WriteLine("The heroes win!");
+                return 0;
+            }
+
             Turn = !Turn;
             Thread.Sleep( 1000 );
+            return 1;
         }
 
         private void Action(string player, Npc npc, Npc enemy)
@@ -58,6 +73,19 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
                     npc.Attack(enemy);
                     break;
             }
+        }
+
+        private void CheckDead()
+        {
+            this._heroes = this._heroes.Where(hero => hero.CurrentHp > 0).ToList();
+            this._monsters = this._monsters.Where(monster =>
+            {
+                if (monster.CurrentHp == 0) {
+                    Console.WriteLine($"{monster.Name} has been defeated");
+                }
+
+                return monster.CurrentHp > 0;
+            }).ToList();
         }
 
     }
