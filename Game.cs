@@ -1,37 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSharp_PlayersGuide_FinalLevel_Challenge
+﻿namespace CSharp_PlayersGuide_FinalLevel_Challenge
 {
     internal class Game
     {
-        public Game(List<Hero> heroes, List<Monster> monsters) {
+        public Game(List<Hero> heroes, List<List<Monster>> monsters) {
             this._monsters = monsters;
             this._heroes = heroes;
             this.Turn = true;
+            this.CurrentMonsterParty = monsters[0];
         }
 
         private List<Hero> _heroes;
-        private List<Monster> _monsters;
+        private List<List<Monster>> _monsters { get; set; }
+        private List<Monster> CurrentMonsterParty { get; set; }
         private bool Turn { get; set; }
 
-        public int PlayRound()
+        public bool PlayRound()
         {
             if (Turn == true)
             {
                 foreach (var npc in this._heroes)
                 {
-                    int enemy = Random.Shared.Next(0, this._monsters.Count);
+                    int enemy = Random.Shared.Next(0, this.CurrentMonsterParty.Count);
                     Console.WriteLine($"It's {npc.Name} turn..");
 
-                    Action("Player 1", npc, this._monsters[enemy]);
+                    Action("Player 1", npc, this.CurrentMonsterParty[enemy]);
                 }
             } else
             {
-                foreach(var npc in this._monsters)
+                foreach(var npc in this.CurrentMonsterParty)
                 {
                     int enemy = Random.Shared.Next(0, this._heroes.Count);
                     Console.WriteLine($"It's {npc.Name} turn..");
@@ -39,22 +35,25 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
                     Action("Player 2", npc, this._heroes[enemy]);
                 }
             }
+            Console.WriteLine("-----");
 
             CheckDead();
+
+            bool hasGameEnded = false;
 
             if (this._heroes.Count == 0)
             {
                 Console.WriteLine("The monsters win!");
-                return 0;
-            } else if (this._monsters.Count == 0)
+                hasGameEnded = true;
+
+            } else if (this.CurrentMonsterParty.Count == 0 && this._monsters.Count > 0)
             {
-                Console.WriteLine("The heroes win!");
-                return 0;
+              hasGameEnded = CallReinforcements();
             }
 
             Turn = !Turn;
             Thread.Sleep( 1000 );
-            return 1;
+            return hasGameEnded;
         }
 
         private void Action(string player, Npc npc, Npc enemy)
@@ -78,7 +77,7 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
         private void CheckDead()
         {
             this._heroes = this._heroes.Where(hero => hero.CurrentHp > 0).ToList();
-            this._monsters = this._monsters.Where(monster =>
+            this.CurrentMonsterParty = this.CurrentMonsterParty.Where(monster =>
             {
                 if (monster.CurrentHp == 0) {
                     Console.WriteLine($"{monster.Name} has been defeated");
@@ -88,5 +87,19 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
             }).ToList();
         }
 
+        private bool CallReinforcements()
+        {
+            this._monsters.RemoveAt(0);
+            if (this._monsters.Count > 0) 
+            {
+                this.CurrentMonsterParty = this._monsters[0];
+                Console.WriteLine("More enemies have spawned!");
+            } else
+            {
+                Console.WriteLine("The heroes win!");
+                return true;
+            }
+            return false;
+        }
     }
 }

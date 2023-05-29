@@ -8,7 +8,7 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
 {
     internal class Hero : Npc
     {
-        public Hero( string name, int level, int hp, string attackName ) : base(name, level, hp, attackName)
+        public Hero( string name, int level, int hp, string attackName, int attackDamage ) : base(name, level, hp, attackName, attackDamage)
         {
             this.Team = Faction.Monsters;            
         }
@@ -17,9 +17,9 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
         {
 
             Console.WriteLine($"{Name} uses {AttackName} on {enemy.Name}");
-            Console.WriteLine($"{AttackName} did 1 damage to {enemy.Name}, health is now {enemy.CurrentHp - 1}/{enemy.Hp}");
+            Console.WriteLine($"{AttackName} did {AttackDamage} damage to {enemy.Name}, health is now {enemy.CurrentHp - AttackDamage}/{enemy.Hp}");
 
-            enemy.RemoveHealth(1);
+            enemy.RemoveHealth(AttackDamage);
         }
     }
 }
