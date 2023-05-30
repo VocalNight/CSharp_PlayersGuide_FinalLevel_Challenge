@@ -8,9 +8,9 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
 {
     internal class Monster : Npc
     {
-        public Monster(string name, int level, int hp, string attackName, int attackDamage) : base(name, level, hp, attackName, attackDamage) 
+        public Monster( string name, int level, int hp, string attackName, int attackDamage ) : base(name, level, hp, attackName, attackDamage)
         {
-                this.Team = Faction.Monsters;
+            this.Team = Faction.Monsters;
         }
 
         public override void Attack( Npc enemy )
@@ -20,7 +20,7 @@ namespace CSharp_PlayersGuide_FinalLevel_Challenge
             Console.WriteLine($"{Name} uses {AttackName} on {enemy.Name}");
             Console.WriteLine($"{AttackName} did {damage} damage to {enemy.Name}, health is now {enemy.CurrentHp - damage}/{enemy.Hp}");
 
-            enemy.RemoveHealth( damage );
+            enemy.RemoveHealth(damage);
         }
     }
 }
